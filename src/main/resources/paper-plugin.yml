@@ -1,0 +1,6 @@
+name: MoYuCustom
+version: '1.0-beta'
+main: io.github.MoYuSOwO.moYuCustom.MoYuCustom
+api-version: '1.21'
+authors: [ MoYuOwO ]
+description: NMSChunkDataHandler
