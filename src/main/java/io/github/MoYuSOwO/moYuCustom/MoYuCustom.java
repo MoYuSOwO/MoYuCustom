@@ -32,7 +32,7 @@ public final class MoYuCustom extends JavaPlugin {
             };
 
     private static final LiteralArgumentBuilder<CommandSourceStack> command =
-            Commands.literal("item").then(
+            Commands.literal("item").requires(ctx -> ctx.getSender().isOp()).then(
                     Commands.literal("get").then(
                             Commands.argument("registryId", ArgumentTypes.namespacedKey())
                                     .suggests(REGISTRY_ID_SUGGESTIONS)
