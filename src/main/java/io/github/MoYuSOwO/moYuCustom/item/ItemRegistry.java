@@ -4,10 +4,13 @@ import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,6 +48,11 @@ public final class ItemRegistry {
 
     public static Set<String> getAllIds() {
         return registry.keySet();
+    }
+
+    public static @NotNull String getRegistryId(ItemStack itemStack) {
+        if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.key)) return "minecraft:" + itemStack.getType().toString().toLowerCase();
+        return Objects.requireNonNull(itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.key, PersistentDataType.STRING));
     }
 
     public static ItemStack get(String registryId, int count) {
