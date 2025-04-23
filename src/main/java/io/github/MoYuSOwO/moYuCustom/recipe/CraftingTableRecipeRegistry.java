@@ -2,19 +2,19 @@ package io.github.MoYuSOwO.moYuCustom.recipe;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
 import io.github.MoYuSOwO.moYuCustom.item.ItemRegistry;
+import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Furnace;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.block.BrewingStartEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,13 +79,13 @@ public final class CraftingTableRecipeRegistry implements Listener {
     }
 
     @EventHandler
-    private static void onPrepareCraftAtCraftingTable(PrepareItemCraftEvent event) {
+    private static void onCraftingTable(PrepareItemCraftEvent event) {
         CraftingInventory inventory = event.getInventory();
         ItemStack[] matrix = inventory.getMatrix();
         if (event.getRecipe() != null) {
             for (int i = 0; i < 9; i++) {
                 if (matrix[i] == null) continue;
-                if ((!ItemRegistry.getRegistryId(matrix[i]).contains("minecraft:")) && (!ItemRegistry.hasOriginalCraft(ItemRegistry.getRegistryId(matrix[i])))) {
+                if ((isNotVanilla(matrix[i])) && (!ItemRegistry.hasOriginalCraft(ItemRegistry.getRegistryId(matrix[i])))) {
                     event.getInventory().setResult(null);
                     break;
                 } else {
@@ -104,5 +104,39 @@ public final class CraftingTableRecipeRegistry implements Listener {
                 event.getInventory().setResult(ItemRegistry.get(r.getResult(), r.getCount()));
             }
         }
+    }
+
+    @EventHandler
+    private static void onAnvil(PrepareAnvilEvent event) {
+        if (event.getResult() == null) return;
+        ItemStack firstItem = event.getInventory().getFirstItem();
+        ItemStack secondItem = event.getInventory().getSecondItem();
+        if (firstItem != null && (isNotVanilla(firstItem))) {
+            event.setResult(null);
+            return;
+        }
+        if (secondItem != null && (isNotVanilla(secondItem))) {
+            event.setResult(null);
+        }
+    }
+
+    @EventHandler
+    private static void onFurnace(FurnaceBurnEvent event) {
+        Furnace furnace = (Furnace) event.getBlock().getState();
+        ItemStack fuel = furnace.getSnapshotInventory().getFuel();
+        ItemStack smelting = furnace.getSnapshotInventory().getSmelting();
+        if ((isNotVanilla(smelting)) || (isNotVanilla(fuel))) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    private static void onSmithing(PrepareSmithingEvent event) {
+        if (event.getInventory().getInputEquipment() == null) return;
+        if (isNotVanilla(event.getInventory().getInputEquipment())) event.setResult(null);
+    }
+
+    private static boolean isNotVanilla(@NotNull ItemStack itemStack) {
+        return !ItemRegistry.getRegistryId(itemStack).contains("minecraft:");
     }
 }
