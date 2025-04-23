@@ -54,7 +54,6 @@ public class CustomShapelessRecipe {
         }
         if (i == recipe.length) throw new ArrayIndexOutOfBoundsException("You can no longer add!");
         recipe[i++] = ItemRegistry.getRegistryId(itemStack);
-        System.out.println(Arrays.toString(recipe));
     }
 
     public void add(ItemStack... itemStacks) {
@@ -85,15 +84,12 @@ public class CustomShapelessRecipe {
         } catch (IllegalAccessException e) {
             MoYuCustom.instance.getLogger().severe(e.getLocalizedMessage());
         }
-        System.out.println(Arrays.toString(recipe));
         Arrays.sort(recipe);
-        System.out.println(Arrays.toString(recipe));
         StringBuilder builtRecipe = new StringBuilder();
         for (String s : recipe) {
             if (!s.isEmpty()) builtRecipe.append(s);
             builtRecipe.append(",");
         }
-        System.out.println(builtRecipe);
         CraftingTableRecipeRegistry.register(builtRecipe.toString(), this);
         built = true;
     }
