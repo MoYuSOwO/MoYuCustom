@@ -3,6 +3,7 @@ package io.github.MoYuSOwO.moYuCustom.item;
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.checkerframework.checker.units.qual.N;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,5 +80,9 @@ public final class ReadUtil {
             foodItem = new FoodItem(nutrition, saturation, canAlwaysEat);
         }
         return foodItem;
+    }
+
+    public static boolean getOriginalCraft(YamlConfiguration item) {
+        return item.getBoolean("hasOriginalCraft");
     }
 }

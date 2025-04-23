@@ -17,15 +17,17 @@ class CustomItem {
 
     private final String registryId;
     private final Material rawMaterial;
+    private final boolean hasOriginalCraft;
     private final Integer customModelData;
     private final Component displayName;
     private final List<Component> lore;
     private final FoodItem foodItem;
     private final ItemStack itemStack;
 
-    protected CustomItem(String registryId, Material rawMaterial, Integer customModelData, Component displayName, List<Component> lore, FoodItem foodItem) {
+    protected CustomItem(String registryId, Material rawMaterial, boolean hasOriginalCraft, Integer customModelData, Component displayName, List<Component> lore, FoodItem foodItem) {
         this.registryId = registryId;
         this.rawMaterial = rawMaterial;
+        this.hasOriginalCraft = hasOriginalCraft;
         this.customModelData = customModelData;
         this.displayName = displayName;
         this.lore = lore;
@@ -33,8 +35,8 @@ class CustomItem {
         this.itemStack = createNewItemStack(1);
     }
 
-    protected CustomItem(String registryId, Material rawMaterial, Integer customModelData, String displayName, List<String> lore, FoodItem foodItem) {
-        this(registryId, rawMaterial, customModelData, to(displayName), to(lore), foodItem);
+    protected CustomItem(String registryId, Material rawMaterial, boolean hasOriginalCraft, Integer customModelData, String displayName, List<String> lore, FoodItem foodItem) {
+        this(registryId, rawMaterial, hasOriginalCraft, customModelData, to(displayName), to(lore), foodItem);
     }
 
     private ItemStack createNewItemStack(int count) {
@@ -66,6 +68,10 @@ class CustomItem {
     protected boolean equals(@NotNull ItemStack itemStack) {
         if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.registryIdKey)) return false;
         return itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.registryIdKey, PersistentDataType.STRING).equals(this.registryId);
+    }
+
+    protected boolean hasOriginalCraft() {
+        return this.hasOriginalCraft;
     }
 
     private static Component to(String s) {

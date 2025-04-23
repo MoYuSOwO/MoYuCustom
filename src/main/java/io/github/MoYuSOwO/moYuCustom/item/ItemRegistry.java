@@ -34,16 +34,17 @@ public final class ItemRegistry {
     private static void registerItem(YamlConfiguration item) {
         String registryId = ReadUtil.getRegistryId(item);
         Material rawMaterial = getBukkitMaterial(ReadUtil.getRawMaterialString(item));
+        boolean hasOriginalCraft = ReadUtil.getOriginalCraft(item);
         Integer customModelData = ReadUtil.getCustomModelData(item);
         String displayName = ReadUtil.getDisplayName(item);
         List<String> lore = ReadUtil.getLore(item);
         FoodItem foodItem = ReadUtil.getFood(item);
-        registry.put(registryId, new CustomItem(registryId, rawMaterial, customModelData, displayName, lore, foodItem));
+        registry.put(registryId, new CustomItem(registryId, rawMaterial, hasOriginalCraft, customModelData, displayName, lore, foodItem));
     }
 
-    public static void registerItem(String key, String Id, Material rawMaterial, int customModelData, String displayName, List<String> lore, FoodItem foodItem) {
+    public static void registerItem(String key, String Id, Material rawMaterial, boolean hasOriginalCraft, int customModelData, String displayName, List<String> lore, FoodItem foodItem) {
         String registryId = key + ":" + Id;
-        registry.put(registryId, new CustomItem(registryId, rawMaterial, customModelData, displayName, lore, foodItem));
+        registry.put(registryId, new CustomItem(registryId, rawMaterial, hasOriginalCraft, customModelData, displayName, lore, foodItem));
     }
 
     public static Set<String> getAllIds() {
@@ -77,6 +78,10 @@ public final class ItemRegistry {
             }
         }
         return registry.get(registryId).equals(itemStack);
+    }
+
+    public static boolean hasOriginalCraft(String registryId) {
+        return registry.get(registryId).hasOriginalCraft();
     }
 
     public static int registrySize() {

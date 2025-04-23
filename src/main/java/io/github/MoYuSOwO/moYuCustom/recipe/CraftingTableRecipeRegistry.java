@@ -85,7 +85,7 @@ public final class CraftingTableRecipeRegistry implements Listener {
         if (event.getRecipe() != null) {
             for (int i = 0; i < 9; i++) {
                 if (matrix[i] == null) continue;
-                if (!ItemRegistry.getRegistryId(matrix[i]).contains("minecraft:")) {
+                if ((!ItemRegistry.getRegistryId(matrix[i]).contains("minecraft:")) && (!ItemRegistry.hasOriginalCraft(ItemRegistry.getRegistryId(matrix[i])))) {
                     event.getInventory().setResult(null);
                     break;
                 }
