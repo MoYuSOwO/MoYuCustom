@@ -88,6 +88,8 @@ public final class CraftingTableRecipeRegistry implements Listener {
                 if ((!ItemRegistry.getRegistryId(matrix[i]).contains("minecraft:")) && (!ItemRegistry.hasOriginalCraft(ItemRegistry.getRegistryId(matrix[i])))) {
                     event.getInventory().setResult(null);
                     break;
+                } else {
+                    return;
                 }
             }
         }
