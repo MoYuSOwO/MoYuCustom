@@ -1,7 +1,6 @@
 package io.github.MoYuSOwO.moYuCustom.item;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +18,14 @@ public final class ReadUtil {
         File itemFolder = new File(dataFolder, "item");
         if (!itemFolder.exists()) {
             itemFolder.mkdirs();
-            saveDefaultIfNotExists();
+            saveDefaultIfNotExists("item/magic_bread.yml");
+            saveDefaultIfNotExists("item/magic_diamond.yml");
+            saveDefaultIfNotExists("item/magic_sword.yml");
         }
         return itemFolder.listFiles();
     }
 
-    private static void saveDefaultIfNotExists() {
-        String resourcePath = "item/example_item.yml";
+    private static void saveDefaultIfNotExists(String resourcePath) {
         String targetPath = resourcePath.replace('/', File.separatorChar);
         File targetFile = new File(MoYuCustom.instance.getDataFolder(), targetPath);
         if (targetFile.exists()) {

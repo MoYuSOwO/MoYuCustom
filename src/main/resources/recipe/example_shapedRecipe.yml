@@ -1,0 +1,10 @@
+type: shaped
+shape:
+  - "A B"
+  - "   "
+  - "   "
+mappings:
+  A: "moyuitem:magic_bread"
+  B: "moyuitem:magic_sword"
+result: "apple"
+count: 64

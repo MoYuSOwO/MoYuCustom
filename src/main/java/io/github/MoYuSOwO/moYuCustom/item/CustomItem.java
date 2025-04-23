@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomItem {
+class CustomItem {
 
     private final String registryId;
     private final Material rawMaterial;
@@ -54,7 +54,6 @@ public class CustomItem {
             itemMeta.setFood(foodComponent);
         }
         itemStack.setItemMeta(itemMeta);
-        System.out.println(itemMeta.getFood());
         return itemStack;
     }
 

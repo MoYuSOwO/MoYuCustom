@@ -50,12 +50,12 @@ public final class ItemRegistry {
         return registry.keySet();
     }
 
-    public static @NotNull String getRegistryId(ItemStack itemStack) {
+    public static @NotNull String getRegistryId(@NotNull ItemStack itemStack) {
         if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.key)) return "minecraft:" + itemStack.getType().toString().toLowerCase();
         return Objects.requireNonNull(itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.key, PersistentDataType.STRING));
     }
 
-    public static ItemStack get(String registryId, int count) {
+    public static @NotNull ItemStack get(String registryId, int count) {
         if (!registry.containsKey(registryId)) {
             ItemStack itemStack = getMinecraftItem(registryId, count);
             if (itemStack.equals(ItemStack.empty())) throw new IllegalArgumentException("Can not find the RegistryId in registry!");
@@ -64,7 +64,7 @@ public final class ItemRegistry {
         return registry.get(registryId).to(count);
     }
 
-    public static ItemStack get(String registryId) {
+    public static @NotNull ItemStack get(String registryId) {
         return get(registryId, 1);
     }
 

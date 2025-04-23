@@ -1,0 +1,7 @@
+type: shapelesse
+items:
+  - "moyuitem:magic_diamond"
+  - "moyuitem:magic_bread"
+  - "iron_ingot"
+result: "diamond"
+count: 64

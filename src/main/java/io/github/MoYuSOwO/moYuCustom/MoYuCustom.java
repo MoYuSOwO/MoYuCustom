@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.github.MoYuSOwO.moYuCustom.item.ItemRegistry;
+import io.github.MoYuSOwO.moYuCustom.recipe.CraftingTableRecipeRegistry;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
@@ -85,6 +86,10 @@ public final class MoYuCustom extends JavaPlugin {
         ItemRegistry.register();
         getLogger().info("Successfully register " + ItemRegistry.registrySize() + " custom items");
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> commands.registrar().register(buildCommand));
+        CraftingTableRecipeRegistry.registerListener();
+        CraftingTableRecipeRegistry.register();
+        getLogger().info("Successfully register " + CraftingTableRecipeRegistry.getShapedRegistrySize() + " custom shaped recipes");
+        getLogger().info("Successfully register " + CraftingTableRecipeRegistry.getShapelessRegistrySize() + " custom shapeless recipes");
     }
 
     @Override
