@@ -45,7 +45,7 @@ class CustomItem {
         if (this.customModelData != null) {
             itemMeta.setCustomModelData(this.customModelData);
         }
-        itemMeta.getPersistentDataContainer().set(MoYuCustom.key, PersistentDataType.STRING, this.registryId);
+        itemMeta.getPersistentDataContainer().set(MoYuCustom.registryIdKey, PersistentDataType.STRING, this.registryId);
         if (this.foodItem != FoodItem.EMPTY) {
             FoodComponent foodComponent = itemMeta.getFood();
             foodComponent.setNutrition(this.foodItem.nutrition());
@@ -57,15 +57,15 @@ class CustomItem {
         return itemStack;
     }
 
-    public ItemStack to(int count) {
+    protected ItemStack to(int count) {
         ItemStack itemStack = this.itemStack.clone();
         itemStack.setAmount(count);
         return itemStack;
     }
 
     protected boolean equals(@NotNull ItemStack itemStack) {
-        if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.key)) return false;
-        return itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.key, PersistentDataType.STRING).equals(this.registryId);
+        if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.registryIdKey)) return false;
+        return itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.registryIdKey, PersistentDataType.STRING).equals(this.registryId);
     }
 
     private static Component to(String s) {

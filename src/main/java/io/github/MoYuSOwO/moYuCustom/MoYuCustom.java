@@ -20,7 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MoYuCustom extends JavaPlugin {
 
-    public static NamespacedKey key;
+    public static NamespacedKey registryIdKey;
     public static JavaPlugin instance;
 
     private static final SuggestionProvider<CommandSourceStack> REGISTRY_ID_SUGGESTIONS =
@@ -75,7 +75,7 @@ public final class MoYuCustom extends JavaPlugin {
     public MoYuCustom() {
         super();
         instance = this;
-        key = new NamespacedKey(this, "registryId");
+        registryIdKey = new NamespacedKey(this, "registryId");
     }
 
     @Override

@@ -51,8 +51,8 @@ public final class ItemRegistry {
     }
 
     public static @NotNull String getRegistryId(@NotNull ItemStack itemStack) {
-        if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.key)) return "minecraft:" + itemStack.getType().toString().toLowerCase();
-        return Objects.requireNonNull(itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.key, PersistentDataType.STRING));
+        if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.registryIdKey)) return "minecraft:" + itemStack.getType().toString().toLowerCase();
+        return Objects.requireNonNull(itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.registryIdKey, PersistentDataType.STRING));
     }
 
     public static @NotNull ItemStack get(String registryId, int count) {
@@ -70,7 +70,7 @@ public final class ItemRegistry {
 
     public static boolean is(ItemStack itemStack, String registryId) {
         if (!registry.containsKey(registryId)) {
-            if (itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.key)) {
+            if (itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.registryIdKey)) {
                 return false;
             } else {
                 return itemStack.getType().equals(getBukkitMaterial(registryId));
