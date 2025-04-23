@@ -22,6 +22,7 @@ public final class ReadUtil {
             saveDefaultIfNotExists("item/magic_bread.yml");
             saveDefaultIfNotExists("item/magic_diamond.yml");
             saveDefaultIfNotExists("item/magic_sword.yml");
+            saveDefaultIfNotExists("item/broken_stick.yml");
         }
         return itemFolder.listFiles();
     }
