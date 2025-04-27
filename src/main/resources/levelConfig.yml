@@ -1,0 +1,4 @@
+level_scaling:
+  health_multiplier: 0.2
+  armor_increment: 2.0
+  damage_multiplier: 0.15
