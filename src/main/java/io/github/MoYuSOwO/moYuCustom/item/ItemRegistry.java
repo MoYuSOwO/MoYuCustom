@@ -20,6 +20,11 @@ public final class ItemRegistry {
 
     private ItemRegistry() {}
 
+    public static void init() {
+        ItemRegistry.register();
+        MoYuCustom.instance.getLogger().info("Successfully register " + ItemRegistry.registrySize() + " custom items");
+    }
+
     public static void register() {
         File[] files = ReadUtil.readAllFiles();
         if (files != null) {
