@@ -32,6 +32,10 @@ public class ItemAttribute {
 
     public boolean isEmpty() { return attributeValue.isEmpty(); }
 
+    public boolean hasAttribute(String name) {
+        return attributeValue.containsKey(name);
+    }
+
     public Map<String, Object> getAttributes() {
         return Map.copyOf(attributeValue);
     }

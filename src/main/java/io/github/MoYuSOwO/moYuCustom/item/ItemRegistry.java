@@ -23,7 +23,7 @@ public final class ItemRegistry {
 
     public static void init() {
         ItemRegistry.register();
-        MoYuCustom.instance.getLogger().info("Successfully register " + ItemRegistry.registrySize() + " custom items");
+        MoYuCustom.instance.getLogger().info("成功注册 " + ItemRegistry.registrySize() + " 个自定义物品");
     }
 
     public static void register() {

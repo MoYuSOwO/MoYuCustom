@@ -39,7 +39,7 @@ public final class AttributeRegistry {
 
     public static void init() {
         registerFromFile();
-        MoYuCustom.instance.getLogger().info("successfully register " + attributeRegistry.size() + " custom shaped attributes");;
+        MoYuCustom.instance.getLogger().info("成功注册 " + attributeRegistry.size() + " 个自定义属性");;
     }
 
     private static void registerFromFile() {
