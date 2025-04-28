@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
-public final class ItemCommand {
+public final class ItemCommandRegistrar {
     private static final SuggestionProvider<CommandSourceStack> REGISTRY_ID_SUGGESTIONS =
             (ctx, builder) -> {
                 String currentInput = builder.getRemaining().toLowerCase();
@@ -65,9 +65,9 @@ public final class ItemCommand {
             );
     private static final LiteralCommandNode<CommandSourceStack> buildCommand = command.build();
 
-    private ItemCommand() {}
+    private ItemCommandRegistrar() {}
 
-    public static void init() {
+    public static void registerCommands() {
         MoYuCustom.instance.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> commands.registrar().register(buildCommand));
     }
 }

@@ -1,5 +1,6 @@
 package io.github.MoYuSOwO.moYuCustom.entity;
 
+import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -13,14 +14,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CustomCommand extends Command {
-    private final MonsterManager monsterManager;
 
-    public CustomCommand(MonsterManager monsterManager) {
+    public CustomCommand() {
         super("custom");
-        this.monsterManager = monsterManager;
         this.setPermission("monsterframework.admin");
         this.setPermissionMessage("§c你没有权限使用此指令");
     }
+
     @Override
     public boolean execute(CommandSender sender, @NotNull String label, String @NotNull [] args) {
         if (!sender.hasPermission("monsterframework.admin")) {
@@ -33,7 +33,7 @@ public class CustomCommand extends Command {
         }
         switch (args[0].toLowerCase()) {
             case "summon":
-                if (!(sender instanceof Player)) {
+                if (!(sender instanceof Player player)) {
                     sender.sendMessage("§c此指令只可用于玩家!");
                     return true;
                 }
@@ -42,7 +42,7 @@ public class CustomCommand extends Command {
                     return true;
                 }
                 String idStr = args[1];
-                NamespacedKey id = NamespacedKey.fromString(idStr, monsterManager.getPlugin());
+                NamespacedKey id = NamespacedKey.fromString(idStr, MoYuCustom.instance);
                 if (id == null) {
                     sender.sendMessage("§c无效怪物ID:" + idStr);
                     return true;
@@ -58,10 +58,9 @@ public class CustomCommand extends Command {
                     sender.sendMessage("§c无效数据格式:" + e.getMessage());
                     return true;
                 }
-                Player player = (Player) sender;
                 Location location = player.getLocation();
                 World world = location.getWorld();
-                boolean spawned = monsterManager.spawnMonster(id, level, health, armor, damage, world, location);
+                boolean spawned = MonsterManager.spawnMonster(id, level, health, armor, damage, world, location);
                 if (spawned) {
                     sender.sendMessage("§a已成功生成生物:" + id + ",等级为:" + level+"级");
                 } else {
@@ -70,7 +69,7 @@ public class CustomCommand extends Command {
                 return true;
 
             case "reload":
-                monsterManager.loadMonsters();
+                MonsterManager.loadMonsters();
                 sender.sendMessage("§a配置文件重载成功!");
                 return true;
 
@@ -91,10 +90,10 @@ public class CustomCommand extends Command {
             }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("summon")) {
             String input = args[1].toLowerCase();
-            completions.addAll(monsterManager.getMonsterIds().stream()
+            completions.addAll(MonsterManager.getMonsterIds().stream()
                     .filter(id -> id.getKey().toLowerCase().startsWith(input))
                     .map(NamespacedKey::toString)
-                    .collect(Collectors.toList()));
+                    .toList());
         }
         return completions;
     }

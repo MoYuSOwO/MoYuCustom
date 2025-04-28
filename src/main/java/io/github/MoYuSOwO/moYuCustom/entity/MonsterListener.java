@@ -10,36 +10,38 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 
 public class MonsterListener implements Listener {
-    private final MonsterManager manager;
-    private final NamespacedKey monsterIdKey;
+    private static final NamespacedKey monsterIdKey = new NamespacedKey(MoYuCustom.instance, "monster_id");
 
-    public MonsterListener(MonsterManager manager, SkillSystem skillSystem) {
-        this.manager = manager;
-        this.monsterIdKey = new NamespacedKey(MoYuCustom.instance, "monster_id");
+    private MonsterListener() {}
+
+    public static void registerListener() {
+        MoYuCustom.instance.getServer().getPluginManager().registerEvents(new MonsterListener(), MoYuCustom.instance);
     }
+
     @EventHandler
-    public void onCreatureSpawn(CreatureSpawnEvent event) {
+    private static void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL) return;
-        MonsterConfig config = manager.checkNaturalSpawn(event.getEntityType(), event.getEntity().getWorld(), event.getLocation());
+        MonsterConfig config = MonsterManager.checkNaturalSpawn(event.getEntityType(), event.getEntity().getWorld(), event.getLocation());
         if (config != null) {
             event.setCancelled(true);
-            manager.spawnMonster(config.getId(), event.getEntity().getWorld(), event.getLocation());
+            MonsterManager.spawnMonster(config.getId(), event.getEntity().getWorld(), event.getLocation());
         }
     }
+
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
+    private static void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         String monsterIdStr = entity.getPersistentDataContainer().get(monsterIdKey, PersistentDataType.STRING);
         if (monsterIdStr != null) {
-            NamespacedKey monsterId = NamespacedKey.fromString(monsterIdStr, manager.getPlugin());
+            NamespacedKey monsterId = NamespacedKey.fromString(monsterIdStr, MoYuCustom.instance);
             if (monsterId == null) {
-                manager.getPlugin().getLogger().warning("无效生物ID:" + monsterIdStr);
+                MoYuCustom.instance.getLogger().warning("无效生物ID:" + monsterIdStr);
                 return;
             }
-            MonsterConfig config = manager.getMonsterConfig(monsterId);
+            MonsterConfig config = MonsterManager.getMonsterConfig(monsterId);
             if (config != null) {
                 event.getDrops().clear();
-                manager.handleDrops(entity, config);
+                MonsterManager.handleDrops(entity, config);
                 if (config.getExplosion() != null) {
                     entity.getWorld().createExplosion(
                             entity.getLocation(),
@@ -49,7 +51,7 @@ public class MonsterListener implements Listener {
                     );
                 }
             } else {
-                manager.getPlugin().getLogger().warning("无法在配置文件找到怪物ID:" + monsterId);
+                MoYuCustom.instance.getLogger().warning("无法在配置文件找到怪物ID:" + monsterId);
             }
         }
 
