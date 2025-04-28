@@ -4,16 +4,18 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.ComponentLike;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
-public final class ItemCommand {
+public final class ItemCommandRegistrar {
     private static final SuggestionProvider<CommandSourceStack> REGISTRY_ID_SUGGESTIONS =
             (ctx, builder) -> {
                 String currentInput = builder.getRemaining().toLowerCase();
@@ -61,5 +63,11 @@ public final class ItemCommand {
                             )
                     )
             );
-    public static final LiteralCommandNode<CommandSourceStack> buildCommand = command.build();
+    private static final LiteralCommandNode<CommandSourceStack> buildCommand = command.build();
+
+    private ItemCommandRegistrar() {}
+
+    public static void registerCommands() {
+        MoYuCustom.instance.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> commands.registrar().register(buildCommand));
+    }
 }
