@@ -1,6 +1,7 @@
 package io.github.MoYuSOwO.moYuCustom.item;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
+import io.github.MoYuSOwO.moYuCustom.attribute.AttributeRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 class CustomItem {
 
@@ -22,9 +24,10 @@ class CustomItem {
     private final Component displayName;
     private final List<Component> lore;
     private final FoodItem foodItem;
+    private final ItemAttribute itemAttribute;
     private final ItemStack itemStack;
 
-    protected CustomItem(String registryId, Material rawMaterial, boolean hasOriginalCraft, Integer customModelData, Component displayName, List<Component> lore, FoodItem foodItem) {
+    protected CustomItem(String registryId, Material rawMaterial, boolean hasOriginalCraft, Integer customModelData, Component displayName, List<Component> lore, FoodItem foodItem, ItemAttribute itemAttribute) {
         this.registryId = registryId;
         this.rawMaterial = rawMaterial;
         this.hasOriginalCraft = hasOriginalCraft;
@@ -32,11 +35,12 @@ class CustomItem {
         this.displayName = displayName;
         this.lore = lore;
         this.foodItem = foodItem;
+        this.itemAttribute = itemAttribute;
         this.itemStack = createNewItemStack(1);
     }
 
-    protected CustomItem(String registryId, Material rawMaterial, boolean hasOriginalCraft, Integer customModelData, String displayName, List<String> lore, FoodItem foodItem) {
-        this(registryId, rawMaterial, hasOriginalCraft, customModelData, to(displayName), to(lore), foodItem);
+    protected CustomItem(String registryId, Material rawMaterial, boolean hasOriginalCraft, Integer customModelData, String displayName, List<String> lore, FoodItem foodItem, ItemAttribute itemAttribute) {
+        this(registryId, rawMaterial, hasOriginalCraft, customModelData, to(displayName), to(lore), foodItem, itemAttribute);
     }
 
     private ItemStack createNewItemStack(int count) {
@@ -54,6 +58,15 @@ class CustomItem {
             foodComponent.setSaturation(this.foodItem.saturation());
             foodComponent.setCanAlwaysEat(this.foodItem.canAlwaysEat());
             itemMeta.setFood(foodComponent);
+        }
+        if (!this.itemAttribute.isEmpty()) {
+            for (Map.Entry<String, Object> entry : this.itemAttribute.getAttributes().entrySet()) {
+                itemMeta.getPersistentDataContainer().set(
+                        AttributeRegistry.getKey(entry.getKey()),
+                        AttributeRegistry.getAttributePDCType(entry.getKey()),
+                        this.itemAttribute.getAttributeValue(entry.getKey())
+                );
+            }
         }
         itemStack.setItemMeta(itemMeta);
         return itemStack;
@@ -82,7 +95,11 @@ class CustomItem {
     private static List<Component> to(List<String> list) {
         List<Component> newList = new ArrayList<>();
         for (String s : list) {
-            newList.add(to(s));
+            newList.add(
+                    MiniMessage.miniMessage().deserialize(
+                            "<gray><italic:false>" + s
+                    )
+            );
         }
         return newList;
     }

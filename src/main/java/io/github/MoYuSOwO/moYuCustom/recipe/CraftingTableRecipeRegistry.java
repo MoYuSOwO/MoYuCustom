@@ -28,8 +28,8 @@ public final class CraftingTableRecipeRegistry implements Listener {
     public static void init() {
         CraftingTableRecipeRegistry.registerListener();
         CraftingTableRecipeRegistry.register();
-        MoYuCustom.instance.getLogger().info("successfully register " + CraftingTableRecipeRegistry.getShapedRegistrySize() + " custom shaped recipes");
-        MoYuCustom.instance.getLogger().info("successfully register " + CraftingTableRecipeRegistry.getShapelessRegistrySize() + " custom shapeless recipes");
+        MoYuCustom.instance.getLogger().info("successfully registerFromFile " + CraftingTableRecipeRegistry.getShapedRegistrySize() + " custom shaped recipes");
+        MoYuCustom.instance.getLogger().info("successfully registerFromFile " + CraftingTableRecipeRegistry.getShapelessRegistrySize() + " custom shapeless recipes");
     }
 
     private CraftingTableRecipeRegistry() {}

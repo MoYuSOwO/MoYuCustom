@@ -1,5 +1,6 @@
 package io.github.MoYuSOwO.moYuCustom;
 
+import io.github.MoYuSOwO.moYuCustom.attribute.AttributeRegistry;
 import io.github.MoYuSOwO.moYuCustom.entity.EntityCommandRegistrar;
 import io.github.MoYuSOwO.moYuCustom.entity.EntityInitializer;
 import io.github.MoYuSOwO.moYuCustom.item.ItemCommandRegistrar;
@@ -25,6 +26,7 @@ public final class MoYuCustom extends JavaPlugin {
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
         }
+        AttributeRegistry.init();
         ItemRegistry.init();
         ItemCommandRegistrar.registerCommands();
         CraftingTableRecipeRegistry.init();

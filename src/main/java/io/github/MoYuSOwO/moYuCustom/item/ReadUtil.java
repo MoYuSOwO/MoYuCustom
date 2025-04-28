@@ -1,6 +1,7 @@
 package io.github.MoYuSOwO.moYuCustom.item;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
+import io.github.MoYuSOwO.moYuCustom.attribute.AttributeRegistry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.checkerframework.checker.units.qual.N;
@@ -81,6 +82,18 @@ public final class ReadUtil {
             foodItem = new FoodItem(nutrition, saturation, canAlwaysEat);
         }
         return foodItem;
+    }
+
+    public static @NotNull ItemAttribute getAttribute(YamlConfiguration item) {
+        ItemAttribute itemAttribute = new ItemAttribute();
+        ConfigurationSection attribute = item.getConfigurationSection("attribute");
+        if (attribute != null) {
+            for (String key : attribute.getKeys(false)) {
+                if (key.contains(":")) itemAttribute.addAttribute(key, attribute.get(key));
+                else itemAttribute.addAttribute("moyuattribute:" + key, attribute.get(key));
+            }
+        }
+        return itemAttribute;
     }
 
     public static boolean getOriginalCraft(YamlConfiguration item) {

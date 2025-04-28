@@ -1,6 +1,7 @@
 package io.github.MoYuSOwO.moYuCustom.item;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
+import net.minecraft.world.item.Item;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -44,12 +45,13 @@ public final class ItemRegistry {
         String displayName = ReadUtil.getDisplayName(item);
         List<String> lore = ReadUtil.getLore(item);
         FoodItem foodItem = ReadUtil.getFood(item);
-        registry.put(registryId, new CustomItem(registryId, rawMaterial, hasOriginalCraft, customModelData, displayName, lore, foodItem));
+        ItemAttribute itemAttribute = ReadUtil.getAttribute(item);
+        registry.put(registryId, new CustomItem(registryId, rawMaterial, hasOriginalCraft, customModelData, displayName, lore, foodItem, itemAttribute));
     }
 
-    public static void registerItem(String key, String Id, Material rawMaterial, boolean hasOriginalCraft, int customModelData, String displayName, List<String> lore, FoodItem foodItem) {
+    public static void registerItem(String key, String Id, Material rawMaterial, boolean hasOriginalCraft, int customModelData, String displayName, List<String> lore, FoodItem foodItem, ItemAttribute itemAttribute) {
         String registryId = key + ":" + Id;
-        registry.put(registryId, new CustomItem(registryId, rawMaterial, hasOriginalCraft, customModelData, displayName, lore, foodItem));
+        registry.put(registryId, new CustomItem(registryId, rawMaterial, hasOriginalCraft, customModelData, displayName, lore, foodItem, itemAttribute));
     }
 
     public static Set<String> getAllIds() {
