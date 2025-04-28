@@ -25,6 +25,13 @@ public final class CraftingTableRecipeRegistry implements Listener {
         Bukkit.getPluginManager().registerEvents(new CraftingTableRecipeRegistry(), MoYuCustom.instance);
     }
 
+    public static void init() {
+        CraftingTableRecipeRegistry.registerListener();
+        CraftingTableRecipeRegistry.register();
+        MoYuCustom.instance.getLogger().info("successfully register " + CraftingTableRecipeRegistry.getShapedRegistrySize() + " custom shaped recipes");
+        MoYuCustom.instance.getLogger().info("successfully register " + CraftingTableRecipeRegistry.getShapelessRegistrySize() + " custom shapeless recipes");
+    }
+
     private CraftingTableRecipeRegistry() {}
 
     private static final ConcurrentHashMap<String, CustomShapedRecipe> shapedRegistry = new ConcurrentHashMap<>();

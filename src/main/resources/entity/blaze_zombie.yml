@@ -1,0 +1,34 @@
+id: blaze_zombie
+type: ZOMBIE
+name: Blaze Zombie
+level_min: 1
+level_max: 10
+health: 20.0
+armor: 0.0
+attack_damage: 3.0
+speed: 0.23
+spawn:
+  random: true
+  chance: 0.05
+  biomes:
+    - PLAINS
+    - DESERT
+  worlds:
+    - world
+drops:
+  - item: minecraft:blaze_rod
+    amount: 1-3
+    chance: 0.5
+  - item: Moyu:magic_bread
+    amount: 1-3
+    chance: 0.5
+on_death:
+  explosion:
+    power: 0.0
+    break_blocks: false
+skills:
+  - type: ARROW
+    interval: 5
+    range: 15.0
+    power: 1.0
+    speed: 1.0
