@@ -4,9 +4,11 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.ComponentLike;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -61,5 +63,11 @@ public final class ItemCommand {
                             )
                     )
             );
-    public static final LiteralCommandNode<CommandSourceStack> buildCommand = command.build();
+    private static final LiteralCommandNode<CommandSourceStack> buildCommand = command.build();
+
+    private ItemCommand() {}
+
+    public static void init() {
+        MoYuCustom.instance.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> commands.registrar().register(buildCommand));
+    }
 }
