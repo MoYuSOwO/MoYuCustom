@@ -1,8 +1,8 @@
 package io.github.MoYuSOwO.moYuCustom.item;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
-import net.minecraft.world.item.Item;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -31,13 +31,13 @@ public final class ItemRegistry {
         if (files != null) {
             for (File file : files) {
                 if (ReadUtil.isYmlFile(file)) {
-                    registerItem(YamlConfiguration.loadConfiguration(file));
+                    registerItemFromFile(YamlConfiguration.loadConfiguration(file));
                 }
             }
         }
     }
 
-    private static void registerItem(YamlConfiguration item) {
+    private static void registerItemFromFile(YamlConfiguration item) {
         String registryId = ReadUtil.getRegistryId(item);
         Material rawMaterial = getBukkitMaterial(ReadUtil.getRawMaterialString(item));
         boolean hasOriginalCraft = ReadUtil.getOriginalCraft(item);
@@ -49,6 +49,7 @@ public final class ItemRegistry {
         registry.put(registryId, new CustomItem(registryId, rawMaterial, hasOriginalCraft, customModelData, displayName, lore, foodItem, itemAttribute));
     }
 
+    @SuppressWarnings("unused")
     public static void registerItem(String key, String Id, Material rawMaterial, boolean hasOriginalCraft, int customModelData, String displayName, List<String> lore, FoodItem foodItem, ItemAttribute itemAttribute) {
         String registryId = key + ":" + Id;
         registry.put(registryId, new CustomItem(registryId, rawMaterial, hasOriginalCraft, customModelData, displayName, lore, foodItem, itemAttribute));
@@ -58,24 +59,44 @@ public final class ItemRegistry {
         return registry.keySet();
     }
 
-    public static @NotNull String getRegistryId(@NotNull ItemStack itemStack) {
-        if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.registryIdKey)) return "minecraft:" + itemStack.getType().toString().toLowerCase();
-        return Objects.requireNonNull(itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.registryIdKey, PersistentDataType.STRING));
+    public static @NotNull NamespacedKey getRegistryId(@NotNull ItemStack itemStack) {
+        if (!itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.registryIdKey)) return itemStack.getType().getKey();
+        String registryIdString = itemStack.getItemMeta().getPersistentDataContainer().get(MoYuCustom.registryIdKey, PersistentDataType.STRING);
+        NamespacedKey registryId = NamespacedKey.fromString(Objects.requireNonNull(registryIdString));
+        return Objects.requireNonNull(registryId);
     }
 
-    public static @NotNull ItemStack get(String registryId, int count) {
-        if (!registry.containsKey(registryId)) {
-            ItemStack itemStack = getMinecraftItem(registryId, count);
+    public static boolean hasAttribute(NamespacedKey registryId, NamespacedKey attributeId) {
+        if (!registry.containsKey(registryId.asString())) return false;
+        return registry.get(registryId.asString()).hasAttribute(attributeId);
+    }
+
+    /**
+     * 根据物品ID和属性名自动返回正确类型的值
+     * 基本类型不能取消装箱
+     * @param registryId 物品ID
+     * @param attributeId 属性名称
+     * @return 类型转换后的值，如果不存在或类型不匹配返回null
+     */
+    public static @Nullable <T> T getAttributeValue(NamespacedKey registryId, NamespacedKey attributeId) {
+        if (!registry.containsKey(registryId.asString())) throw new IllegalArgumentException("Can not find the RegistryId in registry!");
+        return registry.get(registryId.asString()).getAttributeValue(attributeId);
+    }
+
+    public static @NotNull ItemStack get(NamespacedKey registryId, int count) {
+        if (!registry.containsKey(registryId.asString())) {
+            ItemStack itemStack = getMinecraftItem(registryId.asString(), count);
             if (itemStack.equals(ItemStack.empty())) throw new IllegalArgumentException("Can not find the RegistryId in registry!");
             return itemStack;
         }
-        return registry.get(registryId).to(count);
+        return registry.get(registryId.asString()).to(count);
     }
 
-    public static @NotNull ItemStack get(String registryId) {
+    public static @NotNull ItemStack get(NamespacedKey registryId) {
         return get(registryId, 1);
     }
 
+    @SuppressWarnings("unused")
     public static boolean is(ItemStack itemStack, String registryId) {
         if (!registry.containsKey(registryId)) {
             if (itemStack.getItemMeta().getPersistentDataContainer().has(MoYuCustom.registryIdKey)) {
@@ -87,8 +108,8 @@ public final class ItemRegistry {
         return registry.get(registryId).equals(itemStack);
     }
 
-    public static boolean hasOriginalCraft(String registryId) {
-        return registry.get(registryId).hasOriginalCraft();
+    public static boolean hasOriginalCraft(NamespacedKey registryId) {
+        return registry.get(registryId.asString()).hasOriginalCraft();
     }
 
     public static int registrySize() {

@@ -48,7 +48,7 @@ public class CustomShapedRecipe {
         } catch (IllegalAccessException e) {
             MoYuCustom.instance.getLogger().severe(e.getLocalizedMessage());
         }
-        toRegistryId.put(c, ItemRegistry.getRegistryId(itemStack));
+        toRegistryId.put(c, ItemRegistry.getRegistryId(itemStack).asString());
     }
 
     public void setResult(ItemStack itemStack, int count) {
@@ -57,7 +57,7 @@ public class CustomShapedRecipe {
         } catch (IllegalAccessException e) {
             MoYuCustom.instance.getLogger().severe(e.getLocalizedMessage());
         }
-        result = ItemRegistry.getRegistryId(itemStack);
+        result = ItemRegistry.getRegistryId(itemStack).asString();
         this.count = count;
     }
 

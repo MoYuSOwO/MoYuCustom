@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("UnstableApiUsage")
 public final class ItemCommandRegistrar {
     private static final SuggestionProvider<CommandSourceStack> REGISTRY_ID_SUGGESTIONS =
             (ctx, builder) -> {
@@ -33,7 +34,7 @@ public final class ItemCommandRegistrar {
                                     .executes(
                                             ctx -> {
                                                 if (ctx.getSource().getSender() instanceof Player player) {
-                                                    String registryId = ctx.getArgument("registryId", NamespacedKey.class).asString();
+                                                    NamespacedKey registryId = ctx.getArgument("registryId", NamespacedKey.class);
                                                     player.give(ItemRegistry.get(registryId, 1));
                                                     return 1;
                                                 }
@@ -49,7 +50,7 @@ public final class ItemCommandRegistrar {
                                             .executes(
                                                     ctx -> {
                                                         if (ctx.getSource().getSender() instanceof Player player) {
-                                                            String registryId = ctx.getArgument("registryId", NamespacedKey.class).asString();
+                                                            NamespacedKey registryId = ctx.getArgument("registryId", NamespacedKey.class);
                                                             int count = IntegerArgumentType.getInteger(ctx, "count");
                                                             player.give(ItemRegistry.get(registryId, count));
                                                             return 1;

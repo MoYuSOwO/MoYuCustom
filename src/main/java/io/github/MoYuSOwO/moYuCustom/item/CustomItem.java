@@ -5,15 +5,18 @@ import io.github.MoYuSOwO.moYuCustom.attribute.AttributeRegistry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 class CustomItem {
 
@@ -43,6 +46,7 @@ class CustomItem {
         this(registryId, rawMaterial, hasOriginalCraft, customModelData, to(displayName), to(lore), foodItem, itemAttribute);
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private ItemStack createNewItemStack(int count) {
         ItemStack itemStack = new ItemStack(this.rawMaterial, count);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -61,15 +65,24 @@ class CustomItem {
         }
         if (!this.itemAttribute.isEmpty()) {
             for (Map.Entry<String, Object> entry : this.itemAttribute.getAttributes().entrySet()) {
+                System.out.println(entry);
                 itemMeta.getPersistentDataContainer().set(
                         AttributeRegistry.getKey(entry.getKey()),
                         AttributeRegistry.getAttributePDCType(entry.getKey()),
-                        this.itemAttribute.getAttributeValue(entry.getKey())
+                        Objects.requireNonNull(this.itemAttribute.getAttributeValue(Objects.requireNonNull(NamespacedKey.fromString(entry.getKey()))))
                 );
             }
         }
         itemStack.setItemMeta(itemMeta);
         return itemStack;
+    }
+
+    protected boolean hasAttribute(NamespacedKey name) {
+        return itemAttribute.hasAttribute(name.asString());
+    }
+
+    protected @Nullable <T> T getAttributeValue(NamespacedKey name) {
+        return itemAttribute.getAttributeValue(name);
     }
 
     protected ItemStack to(int count) {

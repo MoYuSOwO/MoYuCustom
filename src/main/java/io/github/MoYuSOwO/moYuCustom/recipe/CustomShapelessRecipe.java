@@ -4,7 +4,6 @@ import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
 import io.github.MoYuSOwO.moYuCustom.item.ItemRegistry;
 import org.bukkit.inventory.ItemStack;
 
-import javax.naming.CannotProceedException;
 import java.util.Arrays;
 
 public class CustomShapelessRecipe {
@@ -20,7 +19,7 @@ public class CustomShapelessRecipe {
         Arrays.fill(inv, "");
         for (int i = 0; i < 9; i++) {
             if (matrix[i] != null) {
-                inv[i] = ItemRegistry.getRegistryId(matrix[i]);
+                inv[i] = ItemRegistry.getRegistryId(matrix[i]).asString();
             }
         }
         Arrays.sort(inv);
@@ -42,7 +41,7 @@ public class CustomShapelessRecipe {
 
     public CustomShapelessRecipe(ItemStack result, int count) {
         this();
-        this.result = ItemRegistry.getRegistryId(result);
+        this.result = ItemRegistry.getRegistryId(result).asString();
         this.count = count;
     }
 
@@ -53,9 +52,10 @@ public class CustomShapelessRecipe {
             MoYuCustom.instance.getLogger().severe(e.getLocalizedMessage());
         }
         if (i == recipe.length) throw new ArrayIndexOutOfBoundsException("You can no longer add!");
-        recipe[i++] = ItemRegistry.getRegistryId(itemStack);
+        recipe[i++] = ItemRegistry.getRegistryId(itemStack).asString();
     }
 
+    @SuppressWarnings("unused")
     public void add(ItemStack... itemStacks) {
         try {
             if (built) throw new IllegalAccessException("It's already registered!");
@@ -64,17 +64,18 @@ public class CustomShapelessRecipe {
         }
         if (itemStacks.length + i > recipe.length) throw new ArrayIndexOutOfBoundsException("You can no long add!");
         for (ItemStack itemStack : itemStacks) {
-            recipe[i++] = ItemRegistry.getRegistryId(itemStack);
+            recipe[i++] = ItemRegistry.getRegistryId(itemStack).asString();
         }
     }
 
+    @SuppressWarnings("unused")
     public void setResult(ItemStack itemStack, int count) {
         try {
             if (built) throw new IllegalAccessException("It's already registered!");
         } catch (IllegalAccessException e) {
             MoYuCustom.instance.getLogger().severe(e.getLocalizedMessage());
         }
-        result = ItemRegistry.getRegistryId(itemStack);
+        result = ItemRegistry.getRegistryId(itemStack).asString();
         this.count = count;
     }
 

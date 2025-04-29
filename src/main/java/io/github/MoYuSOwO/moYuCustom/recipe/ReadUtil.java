@@ -1,6 +1,7 @@
 package io.github.MoYuSOwO.moYuCustom.recipe;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -56,11 +57,13 @@ public final class ReadUtil {
         if (yml.isConfigurationSection("mappings")) {
             Map<Character, String> mappings = new HashMap<>();
             ConfigurationSection mappingsSection = yml.getConfigurationSection("mappings");
-            for (String key : mappingsSection.getKeys(false)) {
-                if (key.length() != 1) throw new IllegalArgumentException("You must provide a character for mappings!");
-                String value = mappingsSection.getString(key);
-                if (value == null) throw new IllegalArgumentException("You must provide a item for mappings!");
-                mappings.put(key.charAt(0), value);
+            if (mappingsSection != null) {
+                for (String key : mappingsSection.getKeys(false)) {
+                    if (key.length() != 1) throw new IllegalArgumentException("You must provide a character for mappings!");
+                    String value = mappingsSection.getString(key);
+                    if (value == null) throw new IllegalArgumentException("You must provide a item for mappings!");
+                    mappings.put(key.charAt(0), value);
+                }
             }
             return mappings;
         } else {
@@ -74,9 +77,9 @@ public final class ReadUtil {
         else throw new IllegalArgumentException("You must provide a item list for shapelessRecipe!");
     }
 
-    public static String getResult(YamlConfiguration yml) {
+    public static NamespacedKey getResult(YamlConfiguration yml) {
         String result = yml.getString("result");
-        if (result != null) return result;
+        if (result != null) return NamespacedKey.fromString(result);
         else throw new IllegalArgumentException("You must provide a result for recipe!");
     }
 

@@ -1,7 +1,6 @@
 package io.github.MoYuSOwO.moYuCustom.attribute;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
-import io.github.MoYuSOwO.moYuCustom.recipe.CraftingTableRecipeRegistry;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.persistence.PersistentDataType;
@@ -39,7 +38,7 @@ public final class AttributeRegistry {
 
     public static void init() {
         registerFromFile();
-        MoYuCustom.instance.getLogger().info("成功注册 " + attributeRegistry.size() + " 个自定义属性");;
+        MoYuCustom.instance.getLogger().info("成功注册 " + attributeRegistry.size() + " 个自定义属性");
     }
 
     private static void registerFromFile() {
@@ -54,6 +53,7 @@ public final class AttributeRegistry {
         }
     }
 
+    @SuppressWarnings("unused")
     public static void register(NamespacedKey key, String type) {
         if (!TYPE_MAP.containsKey(type)) throw new IllegalArgumentException("You must provide a legal type name!");
         attributeRegistry.put(key.asString(), type);
@@ -63,7 +63,7 @@ public final class AttributeRegistry {
         return attributeRegistry.containsKey(name);
     }
 
-    public static @NotNull Class<?> getAttributeType(String name) {
+    private static @NotNull Class<?> getAttributeType(String name) {
         if (!attributeRegistry.containsKey(name)) throw new IllegalArgumentException("You must check if attribute exists before get!");
         return TYPE_MAP.get(attributeRegistry.get(name));
     }
@@ -73,17 +73,10 @@ public final class AttributeRegistry {
         return attributePDCType.get(attributeRegistry.get(name));
     }
 
-    /**
-     * 根据属性名自动返回正确类型的值
-     * 基本类型不能取消装箱
-     * @param name 属性名
-     * @param object 属性值的Object对象
-     * @return 类型转换后的对应的属性类型，如果不存在或类型不匹配返回null
-     */
     @SuppressWarnings("unchecked")
-    public static <T> T toAttributeValue(String name, Object object) {
-        if (!attributeRegistry.containsKey(name)) return null;
-        Class<T> type = (Class<T>) getAttributeType(name);
+    public static <T> T toAttributeValue(NamespacedKey name, Object object) {
+        if (!attributeRegistry.containsKey(name.asString())) return null;
+        Class<T> type = (Class<T>) getAttributeType(name.asString());
         try {
             return type.cast(object);
         } catch (ClassCastException e) {

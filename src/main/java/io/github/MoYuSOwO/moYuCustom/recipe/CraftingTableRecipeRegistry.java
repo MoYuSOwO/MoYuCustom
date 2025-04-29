@@ -2,13 +2,12 @@ package io.github.MoYuSOwO.moYuCustom.recipe;
 
 import io.github.MoYuSOwO.moYuCustom.MoYuCustom;
 import io.github.MoYuSOwO.moYuCustom.item.ItemRegistry;
-import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Furnace;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BrewingStartEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class CraftingTableRecipeRegistry implements Listener {
@@ -62,7 +62,7 @@ public final class CraftingTableRecipeRegistry implements Listener {
         List<String> shape = ReadUtil.getShaped(yml);
         CustomShapedRecipe r = new CustomShapedRecipe(shape.get(0), shape.get(1), shape.get(2));
         for (Map.Entry<Character, String> entry : ReadUtil.getShapedMappings(yml).entrySet()) {
-            r.add(entry.getKey(), ItemRegistry.get(entry.getValue()));
+            r.add(entry.getKey(), ItemRegistry.get(NamespacedKey.fromString(entry.getValue())));
         }
         r.setResult(ItemRegistry.get(ReadUtil.getResult(yml)), ReadUtil.getCount(yml));
         r.build();
@@ -72,7 +72,7 @@ public final class CraftingTableRecipeRegistry implements Listener {
         List<String> items = ReadUtil.getShapelessItems(yml);
         CustomShapelessRecipe r = new CustomShapelessRecipe(ItemRegistry.get(ReadUtil.getResult(yml)), ReadUtil.getCount(yml));
         for (String item : items) {
-            r.add(ItemRegistry.get(item));
+            r.add(ItemRegistry.get(NamespacedKey.fromString(item)));
         }
         r.build();
     }
@@ -103,12 +103,12 @@ public final class CraftingTableRecipeRegistry implements Listener {
         String shapedRegistryKey = CustomShapedRecipe.toRegistryKey(matrix);
         if (shapedRegistry.containsKey(shapedRegistryKey)) {
             CustomShapedRecipe r = shapedRegistry.get(shapedRegistryKey);
-            event.getInventory().setResult(ItemRegistry.get(r.getResult(), r.getCount()));
+            event.getInventory().setResult(ItemRegistry.get(Objects.requireNonNull(NamespacedKey.fromString(r.getResult())), r.getCount()));
         } else {
             String shapelessRegistryKey = CustomShapelessRecipe.toRegistryKey(matrix);
             if (shapelessRegistry.containsKey(shapelessRegistryKey)) {
                 CustomShapelessRecipe r = shapelessRegistry.get(shapelessRegistryKey);
-                event.getInventory().setResult(ItemRegistry.get(r.getResult(), r.getCount()));
+                event.getInventory().setResult(ItemRegistry.get(Objects.requireNonNull(NamespacedKey.fromString(r.getResult())), r.getCount()));
             }
         }
     }
@@ -144,6 +144,6 @@ public final class CraftingTableRecipeRegistry implements Listener {
     }
 
     private static boolean isNotVanilla(@NotNull ItemStack itemStack) {
-        return !ItemRegistry.getRegistryId(itemStack).contains("minecraft:");
+        return !ItemRegistry.getRegistryId(itemStack).getNamespace().equals("minecraft");
     }
 }

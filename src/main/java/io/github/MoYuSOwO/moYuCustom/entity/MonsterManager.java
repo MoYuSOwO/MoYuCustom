@@ -11,7 +11,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.NamespacedKey;
 
@@ -75,6 +74,7 @@ public class MonsterManager {
         logger.info("已加载" + monsters.size() + "个自定义生物配置");
     }
 
+    @SuppressWarnings("unused")
     public static int getMonsterCount() {
         return monsters.size();
     }
@@ -98,6 +98,7 @@ public class MonsterManager {
         MoYuCustom.instance.getLogger().warning("无法生成生物: " + id );
         return false;
     }
+
     //用于世界自然生成
     public static boolean spawnMonster(NamespacedKey id, World world, Location location) {
         MonsterConfig config = monsters.get(id);
@@ -108,6 +109,8 @@ public class MonsterManager {
         int level = config.getRandomLevel();
         return spawnMonster(id, level, config.getHealth(level), config.getArmor(level), config.getAttackDamage(level), world, location);
     }
+
+    @SuppressWarnings("unused")
     //指定等级生成
     public static boolean spawnMonster(NamespacedKey id, int level, World world, Location location) {
         MonsterConfig config = monsters.get(id);
@@ -167,8 +170,8 @@ public class MonsterManager {
 
     private static ItemStack getItemFromNamespacedKey(NamespacedKey key, int amount) {
         try {
-            ItemStack customItem = ItemRegistry.get(key.toString(), amount);
-            if (customItem != null && !customItem.getType().isAir()) {
+            ItemStack customItem = ItemRegistry.get(key, amount);
+            if (!customItem.isEmpty()) {
                 return customItem;
             }
         } catch (Exception e) {

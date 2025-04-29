@@ -26,6 +26,7 @@ public final class MoYuCustom extends JavaPlugin {
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
         }
+        MoYuDebug.registerListener();
         AttributeRegistry.init();
         ItemRegistry.init();
         ItemCommandRegistrar.registerCommands();
